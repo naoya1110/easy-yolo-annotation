@@ -7,7 +7,7 @@ import numpy as np
 import os
 from utils import get_base64_img, get_datetime_now_str
 
-root_dir = "data_by_flet_app"
+root_dir = "private_data"
 target_dir = ""
 
 def main(page: ft.Page):
@@ -21,6 +21,7 @@ def main(page: ft.Page):
     page.window_width = 800
 
 
+    # 一連の撮影を開始する
     def start_taking_photos(e):
         global target_dir
         print("start taking photos")
@@ -31,6 +32,7 @@ def main(page: ft.Page):
         camera_button.visible=True
         finish_button.visible=True
 
+    # 一連の撮影を終了する
     def finish_taking_photos(e):
         print("finish taking photos")
         start_button.visible=True
