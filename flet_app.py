@@ -48,7 +48,7 @@ def main(page: ft.Page):
         print(filepath)
         cv2.imwrite(filepath, img)
     
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(1)
 
     # 新しい解像度を設定
     width = 1600  # 新しい幅
