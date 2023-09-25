@@ -5,10 +5,11 @@ import cv2
 import base64
 import numpy as np
 import os
-from utils import get_base64_img, get_datetime_now_str
+from utils import get_base64_img, get_datetime_now_str, scan_cap_devices
 
 root_dir = "private_data"
 target_dir = ""
+cap = None
 
 def main(page: ft.Page):
     
@@ -17,8 +18,8 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     page.bgcolor = ft.colors.INDIGO_50
     page.padding = 50
-    page.window_height = 500
-    page.window_width = 800
+    page.window_height = 800
+    page.window_width = 1000
 
 
     # 一連の撮影を開始する
@@ -46,17 +47,29 @@ def main(page: ft.Page):
         filepath = os.path.join(target_dir, f"{now_str}.jpg")
         print(filepath)
         cv2.imwrite(filepath, img)
-
     
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
+
+    # 新しい解像度を設定
+    width = 1600  # 新しい幅
+    height = 1200  # 新しい高さ
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+
+    # # 解像度の設定を確認
+    # actual_width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+    # actual_height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    # print(f"設定された解像度: {width} x {height}")
+    # print(f"実際の解像度: {actual_width} x {actual_height}")
 
     
     
     # 初期画像（ダミー）
-    img_blank = 255*np.ones((300, 533, 3), dtype="uint8")
+    img_blank = 255*np.ones((int(height/2), int(width/2), 3), dtype="uint8")
     img_h, img_w, _ = img_blank.shape
     image_display = ft.Image(src_base64=get_base64_img(img_blank),
                              width=img_w, height=img_h, fit=ft.ImageFit.CONTAIN)
+
     
     start_button = ft.ElevatedButton("Start",
                                     icon=ft.icons.START,
@@ -68,7 +81,7 @@ def main(page: ft.Page):
                                     visible=False,
                                     on_click=finish_taking_photos)  
     
-    camera_button = ft.ElevatedButton("Photo",
+    camera_button = ft.ElevatedButton("Capture",
                                     icon=ft.icons.CAMERA_ALT_ROUNDED,
                                     visible=False, 
                                     on_click=take_a_photo)
